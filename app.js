@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var router = express.Router();
 
+
 //var routes = require('./routes/index');
 //var users = require('./routes/users');
 
@@ -87,6 +88,15 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   });
+});
+
+io.on('connection', function(client) {
+  console.log('Client connected...');
+
+  client.on('join', function(data) {
+      console.log(data);
+  });
+
 });
 
 module.exports = app;

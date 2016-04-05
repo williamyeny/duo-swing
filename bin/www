@@ -24,6 +24,8 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
+ 
+var io = require('socket.io')(server);
 
 server.listen(port);
 server.on('error', onError);
@@ -88,3 +90,5 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+module.exports = io;
