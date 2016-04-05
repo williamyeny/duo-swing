@@ -1,0 +1,27 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,100,900italic,900,700,700italic,500italic,500,400italic,300italic,100italic,300);
+
+* {
+  padding:0;
+  margin:0;
+  font-family: 'roboto';
+  color:#333333;
+}
+
+#container {
+  text-align: center;
+  width:300px;
+  margin:200px auto auto auto;
+}
+
+#button-container {
+  margin-top:20px;
+}
+
+.button {
+  text-decoration: none;
+  padding:5px 10px 5px 10px;
+  color:white;
+  background-color: deepskyblue;
+  margin:0px 5px 0px 5px;
+}
+
