@@ -90,13 +90,21 @@ app.use(function(err, req, res, next) {
   });
 });
 
+var http = require('http').createServer(app);  
+var io = require('socket.io')(http);
+
 io.on('connection', function(client) {
   console.log('Client connected...');
 
-  client.on('join', function(data) {
-      console.log(data);
+  console.log(client);
+  
+  client.on('disconnect', function(data) {
+    console.log(data);
   });
 
 });
+
+http.listen(3000); 
+console.log('Listening...');
 
 module.exports = app;
