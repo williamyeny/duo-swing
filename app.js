@@ -12,7 +12,8 @@ var router = express.Router();
 
 var app = express();
 
-var server = [];
+var servers = [];
+var players = [];
 
 // view engine setup
 app.set('views', __dirname + '/views');
@@ -35,23 +36,23 @@ app.get('/', function(req, res, next) {
 
 app.get('/play', function(req, res, next) {
   var id;
-  for (i = 0; i < server.length; i++) {
-    if (server[i].players < 2) {
-      id = server[i].id;
+  for (i = 0; i < servers.length; i++) {
+    if (servers[i].players < 2) {
+      id = servers[i].id;
       res.redirect('/game/' + id);
     }
   }
   id = Math.floor(Math.random()*90000) + 10000;
-  server.push({id:id, players:0, private:false});
+  servers.push({id:id, players:0, private:false});
   res.redirect('/game/' + id);
 });
 
 app.get('/game/:id', function(req, res) {
   var id = parseInt(req.params.id);
-  for (i = 0; i < server.length; i++) {
-    if (server[i].id == id) {
-      if (server[i].players < 2) {
-        server[i].players++;
+  for (i = 0; i < servers.length; i++) {
+    if (servers[i].id == id) {
+      if (servers[i].players < 2) {
+        servers[i].players++;
         res.render('game', { id: id });
       }
     }
@@ -96,9 +97,9 @@ var io = require('socket.io')(http);
 io.on('connection', function(client) {
   console.log('Client connected...');
   
-  client.on('join', function(id) {
-    console.log('Client ID: ' + id);
-    client.broadcast.emit('join', id);
+  client.on('join', function(gameId) {
+    players.push({id: client.id, gameId: gameId})
+    client.broadcast.emit('join', gameId);
   });
   
   client.on('update', function(data) {
@@ -106,9 +107,9 @@ io.on('connection', function(client) {
   });
   
   client.on('add existing', function(id) {
-    for (i = 0; i < server.length; i++) {
-      if (server[i].id == id) {
-        if (server[i].players == 2) {
+    for (i = 0; i < servers.length; i++) {
+      if (servers[i].id == id) {
+        if (servers[i].players == 2) {
           client.emit('add existing', true);
         }
         break;
@@ -117,7 +118,20 @@ io.on('connection', function(client) {
   });
   
   client.on('disconnect', function(data) {
-    console.log(data);
+    for (i = 0; i < players.length; i++) {
+      if (players[i].id == client.id) {
+        //remove player
+        var gameId = players[i].gameId;
+        players.slice(i, 1);
+        
+        console.log('player disconnected, game ID: ' + gameId);
+        //alert other player of disconnect
+        client.broadcast.emit('player disconnect', gameId);
+        break;
+        
+      }
+      
+    }
   });
 
 });

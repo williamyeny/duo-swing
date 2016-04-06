@@ -1,5 +1,7 @@
 $(window).resize(function(evt) {
-  $('canvas').attr('width', innerWidth);
-  $('canvas').attr('height', innerHeight);
-  console.log(innerWidth + " " + innerHeight);
+//  game.width = innerWidth;
+//  game.height = innerHeight;
+//  game.stage.bounds.width = innerWidth;
+//  game.stage.bounds.height = innerHeight;
+//  console.log(innerWidth + " " + innerHeight);
 });

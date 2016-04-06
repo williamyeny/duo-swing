@@ -12,8 +12,8 @@ var playState = {
     angle = -5;
     socket.emit('add existing', gameId);
     game.stage.disableVisibilityChange = true;
+    game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
   },
-  
   
   update: function() {
     console.log('updating');
@@ -44,6 +44,13 @@ socket.on('update', function(data) {
     player2.y = data[2];
     player2.angle = data[3];
     player2.anchor.setTo(data[4], 0.5);
+  }
+});
+
+socket.on('player disconnect', function(id) {
+  if (gameId == id) {
+    player2.destroy();
+    $('#overlay').html('other player has disconnected.');
   }
 });
 
