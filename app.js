@@ -95,8 +95,26 @@ var io = require('socket.io')(http);
 
 io.on('connection', function(client) {
   console.log('Client connected...');
-
-  console.log(client);
+  
+  client.on('join', function(id) {
+    console.log('Client ID: ' + id);
+    client.broadcast.emit('join', id);
+  });
+  
+  client.on('update', function(data) {
+    client.broadcast.emit('update', data);
+  });
+  
+  client.on('add existing', function(id) {
+    for (i = 0; i < server.length; i++) {
+      if (server[i].id == id) {
+        if (server[i].players == 2) {
+          client.emit('add existing', true);
+        }
+        break;
+      }
+    }
+  });
   
   client.on('disconnect', function(data) {
     console.log(data);

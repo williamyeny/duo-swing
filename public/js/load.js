@@ -4,6 +4,7 @@ var loadState = {
     
     //load all assets here
     game.load.image('player1','/assets/player1.png');
+    game.load.image('player2','/assets/player2.png');
   },
   
   create: function(){
